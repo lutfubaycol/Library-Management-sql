@@ -8,7 +8,6 @@
 -- VIEW TEMİZLE
 -- =========================
 DROP VIEW IF EXISTS active_borrowings;
-
 -- =========================
 -- TABLOLARI TEMİZLE
 -- =========================
@@ -16,7 +15,6 @@ DROP TABLE IF EXISTS borrowings;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS authors;
-
 -- =========================
 -- TABLOLAR
 -- =========================
@@ -59,7 +57,9 @@ INSERT INTO authors (full_name, birth_year) VALUES
 ('Sabahattin Ali', 1907),
 ('Franz Kafka', 1883),
 ('Victor Hugo', 1802),
-('Albert Camus', 1913);
+('Albert Camus', 1913),
+('Lutfu Baycol', 1994)
+('Natalia Vdovina', 1992);
 
 -- =========================
 -- KİTAPLAR
@@ -68,7 +68,7 @@ INSERT INTO authors (full_name, birth_year) VALUES
 INSERT INTO books (title, page_count, author_id) VALUES
 ('1984', 328, 1),
 ('Animal Farm', 112, 1),
-('Suç ve Ceza', 671, 2),
+('Suç ve Ceza', 671, 8),
 ('Karamazov Kardeşler', 824, 2),
 ('Kürk Mantolu Madonna', 160, 3),
 ('İçimizdeki Şeytan', 208, 3),
@@ -76,7 +76,7 @@ INSERT INTO books (title, page_count, author_id) VALUES
 ('Dönüşüm', 96, 4),
 ('Sefiller', 1463, 5),
 ('Notre Dame''ın Kamburu', 940, 5),
-('Yabancı', 123, 6),
+('Yabancı', 123, 7),
 ('Veba', 308, 6);
 
 -- =========================
@@ -111,47 +111,36 @@ INSERT INTO borrowings (member_id, book_id, borrow_date, return_date) VALUES
 -- =====================================================
 
 -- 1. En çok ödünç alınan kitaplar
-SELECT
-    b.title,
-    COUNT(br.borrowing_id) AS borrow_count
-FROM books b
+
+SELECT b.title, COUNT(br.borrowing_id) AS borrow_count FROM books b
 JOIN borrowings br ON b.book_id = br.book_id
 GROUP BY b.title
 ORDER BY borrow_count DESC;
 
 -- 2. Üyelerin aldığı toplam kitap sayısı
-SELECT
-    m.full_name,
-    COUNT(br.borrowing_id) AS total_borrowed
-FROM members m
+
+SELECT m.full_name, COUNT(br.borrowing_id) AS total_borrowed FROM members m
 LEFT JOIN borrowings br ON m.member_id = br.member_id
 GROUP BY m.full_name
 ORDER BY total_borrowed DESC;
 
 -- 3. Teslim edilmemiş kitaplar
-SELECT
-    m.full_name,
-    b.title,
-    br.borrow_date
-FROM borrowings br
+
+SELECT m.full_name, b.title, br.borrow_date FROM borrowings br
 JOIN members m ON br.member_id = m.member_id
 JOIN books b ON br.book_id = b.book_id
 WHERE br.return_date IS NULL;
 
 -- 4. Yazar başına kitap sayısı
-SELECT
-    a.full_name,
-    COUNT(b.book_id) AS book_count
-FROM authors a
+
+SELECT a.full_name, COUNT(b.book_id) AS book_count FROM authors a
 LEFT JOIN books b ON a.author_id = b.author_id
 GROUP BY a.full_name
 ORDER BY book_count DESC;
 
 -- 5. Ortalama sayfa sayısından uzun kitaplar
-SELECT
-    title,
-    page_count
-FROM books
+
+SELECT title, page_count FROM books
 WHERE page_count >
 (
     SELECT AVG(page_count)
