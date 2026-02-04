@@ -1,8 +1,8 @@
--- =====================================================
+-- ===================================================================
 
 -- Halis Lutfu Baycol - Online Library Management System (PostgreSQL)
 
--- =====================================================
+-- ===================================================================
 
 -- =========================
 -- VIEW TEMİZLE
@@ -141,11 +141,7 @@ ORDER BY book_count DESC;
 -- 5. Ortalama sayfa sayısından uzun kitaplar
 
 SELECT title, page_count FROM books
-WHERE page_count >
-(
-    SELECT AVG(page_count)
-    FROM books
-);
+WHERE page_count > (SELECT AVG(page_count) FROM books) ;
 
 -- =====================================================
 -- VIEW
