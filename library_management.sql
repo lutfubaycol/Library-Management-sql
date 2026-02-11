@@ -7,14 +7,18 @@
 -- =========================
 -- VIEW TEMİZLE
 -- =========================
+
 DROP VIEW IF EXISTS active_borrowings;
+
 -- =========================
 -- TABLOLARI TEMİZLE
 -- =========================
+
 DROP TABLE IF EXISTS borrowings;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS authors;
+
 -- =========================
 -- TABLOLAR
 -- =========================
